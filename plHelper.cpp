@@ -66,86 +66,12 @@ bool CreateInputLayout(ID3D11Device* device, ID3D11InputLayout*& inputLayout, st
 
 	return !FAILED(hr);
 }
-float xpos = 0.f;
-const int nroftriangles = 2 * 3;
-D3D11_SUBRESOURCE_DATA data;
-bool CreateVertexBuffer(ID3D11Device* device, ID3D11Buffer*& vBuffer) 
-{
-	
-	vertex triangles[nroftriangles] =
-	{
-		
-		{{0.f,   0.5f, 0.0f}, {0,0,1}},
-		{{0.5f,  -0.5f, 0.0f}, {0,1,0}},
-		{{0.f, -0.5f, 0.0f}, {1,0,0}},
 
-		{{0.51f,   0.5f, 0.0f}, {1,1,1}},
-		{{0.51f,  -0.5f, 0.0f},{1,1,1}},
-		{{0.01f, 0.5f, 0.0f},{1,1,1}},
-	};
-	D3D11_BUFFER_DESC bDesc;
-	bDesc.ByteWidth = sizeof(vertex) * ARRAYSIZE(triangles);
-	//bDesc.Usage = D3D11_USAGE_IMMUTABLE;
-	bDesc.Usage = D3D11_USAGE_DEFAULT;
-	bDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bDesc.CPUAccessFlags = 0;
-	bDesc.MiscFlags = 0;
-	bDesc.StructureByteStride = 0;
-	
-	
-
-	
-	data.pSysMem = triangles;
-	data.SysMemPitch = 0;
-	data.SysMemSlicePitch = 0;
-
-	HRESULT hr = device->CreateBuffer(&bDesc, &data, &vBuffer);
-	
-	if (FAILED(hr)) {
-		std::cout << "failed" << std::endl;
-		return false;
-	}
-
-	
-
-	return !FAILED(hr);
-}
-
-bool rotateTriangles(float angle, ID3D11Device* device, ID3D11DeviceContext*& immediateContext, ID3D11Buffer*& vBuffer)
-{
-	struct ConstantBuffer {
-		struct {
-			float element[4][4];
-		}transformation;
-	};
-	const ConstantBuffer cb = {
-		{
-			std::cos(angle),  std::sin(angle), 0.f, 0.f,
-			-std::sin(angle), std::cos(angle), 0.f, 0.f,
-			0.f,              0.f,			   1.f, 0.f,
-			0.f,              0.f,			   0.f, 1.f,
-		}
-	};
-	Microsoft::WRL::ComPtr<ID3D11Buffer> pConstantBuffer;
-	D3D11_BUFFER_DESC CBD;
-	CBD.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	CBD.Usage = D3D11_USAGE_DYNAMIC;
-	CBD.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	CBD.MiscFlags = 0u;
-	CBD.ByteWidth = sizeof(cb);
-	CBD.StructureByteStride = 0u;
-	D3D11_SUBRESOURCE_DATA csd = {};
-	csd.pSysMem = &cb;
-
-	HRESULT hr = device->CreateBuffer(&CBD, &data, &vBuffer);
-	
-	//immediateContext->VSSetConstantBuffers(0, 1, pConstantBuffer.GetAddressOf());
-
-	return !FAILED(hr);
-}
 
 bool SetupPipeline(ID3D11Device* device, ID3D11Buffer*& vBuffer, ID3D11VertexShader*& vShader, ID3D11PixelShader*& pShader, ID3D11InputLayout*& inputLayout)
 {
+	//ID3D11RasterizerState* RState;
+	//immediateContext->RSSetState();
 	std::string vShaderByteCode;
 	if (!loadShader(device, vShader, pShader, vShaderByteCode)) 
 	{
@@ -156,12 +82,6 @@ bool SetupPipeline(ID3D11Device* device, ID3D11Buffer*& vBuffer, ID3D11VertexSha
 	if (!CreateInputLayout(device, inputLayout, vShaderByteCode))
 	{
 		std::cerr << "cant load inputlayout" << std::endl;
-		return false;
-	}
-
-	if (!CreateVertexBuffer(device, vBuffer))
-	{
-		std::cerr << "cant load vBuffer" << std::endl;
 		return false;
 	}
 

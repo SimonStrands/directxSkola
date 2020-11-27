@@ -15,4 +15,3 @@ struct vertex {
 };
 
 bool SetupPipeline(ID3D11Device* device, ID3D11Buffer*& vBuffer, ID3D11VertexShader*& vShader, ID3D11PixelShader*& pShader, ID3D11InputLayout*& inputLayout);
-bool rotateTriangles(float angle, ID3D11Device* device, ID3D11DeviceContext *&immediateContext, ID3D11Buffer*& vBuffer);

@@ -1,6 +1,7 @@
 #include "D311Helper.h"
+#include <DirectXMath.h>
 
-bool CreateInsterface(UINT width, UINT height, HWND wnd, ID3D11Device*& device, ID3D11DeviceContext*& immediateContext, IDXGISwapChain*& swapChain) 
+bool CreateInsterface(UINT width, UINT height, HWND wnd, ID3D11Device*& device, ID3D11DeviceContext*& immediateContext, IDXGISwapChain*& swapChain)
 {
     DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
 
@@ -30,14 +31,14 @@ bool CreateInsterface(UINT width, UINT height, HWND wnd, ID3D11Device*& device, 
     D3D_FEATURE_LEVEL featureLvl[] = { D3D_FEATURE_LEVEL_11_0 };
 
     HRESULT hr = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, flags, featureLvl, 1, D3D11_SDK_VERSION, &swapChainDesc, &swapChain, &device, nullptr, &immediateContext);
-    
+
     return !FAILED(hr);
 }
 
-bool CreateRenderTargetView(ID3D11Device* device, IDXGISwapChain* swapChain, ID3D11RenderTargetView*& renderTargetView) 
+bool CreateRenderTargetView(ID3D11Device* device, IDXGISwapChain* swapChain, ID3D11RenderTargetView*& renderTargetView)
 {
     ID3D11Texture2D* backBuffer = nullptr;
-    if (FAILED(swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer)))) 
+    if (FAILED(swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer))))
     {
         std::cerr << "failed to swapchain" << std::endl;
         return false;
@@ -63,7 +64,7 @@ bool CreateDepthStencil(ID3D11Device* device, UINT width, UINT height, ID3D11Tex
     textureDesc.CPUAccessFlags = 0;
     textureDesc.MiscFlags = 0;
 
-    if (FAILED(device->CreateTexture2D(&textureDesc, nullptr, &dsTexture))) 
+    if (FAILED(device->CreateTexture2D(&textureDesc, nullptr, &dsTexture)))
     {
         std::cerr << "failed create 2d texture" << std::endl;
         return false;
@@ -71,6 +72,24 @@ bool CreateDepthStencil(ID3D11Device* device, UINT width, UINT height, ID3D11Tex
 
     HRESULT hr = device->CreateDepthStencilView(dsTexture, nullptr, &dsview);
     return !FAILED(hr);
+}
+
+bool CreateRasterizerState(ID3D11Device* device , ID3D11RasterizerState*& pRS) {
+    D3D11_RASTERIZER_DESC rasterState;
+    rasterState.FillMode = D3D11_FILL_SOLID;
+    rasterState.CullMode = D3D11_CULL_NONE;
+    rasterState.FrontCounterClockwise = false;
+    rasterState.DepthBias = 0;
+    rasterState.SlopeScaledDepthBias = 0;
+    rasterState.DepthBiasClamp = 0;
+    rasterState.DepthClipEnable = true;
+    rasterState.ScissorEnable = false;
+    rasterState.MultisampleEnable = false;
+    rasterState.AntialiasedLineEnable = false;
+    
+
+   HRESULT hr = device->CreateRasterizerState(&rasterState, &pRS);
+   return !FAILED(hr);
 }
 
 void SetViewport(D3D11_VIEWPORT& viewPort, UINT width, UINT height)
@@ -83,9 +102,15 @@ void SetViewport(D3D11_VIEWPORT& viewPort, UINT width, UINT height)
     viewPort.MaxDepth = 1;
 }
 
-bool SetupD3D11(UINT width, UINT height, HWND wnd, ID3D11Device*& device, ID3D11DeviceContext*& immediateContext, IDXGISwapChain*& swapChain, ID3D11RenderTargetView*& renderTarget, ID3D11Texture2D*& dsTexture, ID3D11DepthStencilView*& dsView, D3D11_VIEWPORT& viewPort)
+bool SetupD3D11(UINT width, UINT height, 
+    HWND wnd, ID3D11Device*& device, 
+    ID3D11DeviceContext*& immediateContext, IDXGISwapChain*& swapChain, 
+    ID3D11RenderTargetView*& renderTarget, ID3D11Texture2D*& dsTexture, 
+    ID3D11DepthStencilView*& dsView, D3D11_VIEWPORT& viewPort, 
+    ID3D11RasterizerState*& pRS
+)
 {
-    if (!CreateInsterface(width, height, wnd, device, immediateContext, swapChain)) 
+    if (!CreateInsterface(width, height, wnd, device, immediateContext, swapChain))
     {
         std::cerr << "create interface" << std::endl;
         return false;
@@ -97,9 +122,14 @@ bool SetupD3D11(UINT width, UINT height, HWND wnd, ID3D11Device*& device, ID3D11
         return false;
     }
 
-    if (!CreateDepthStencil(device, width, height, dsTexture, dsView)) 
+    if (!CreateDepthStencil(device, width, height, dsTexture, dsView))
     {
         std::cerr << "create depth" << std::endl;
+        return false;
+    }
+    if (!CreateRasterizerState(device, pRS))
+    {
+        std::cerr << "create rasterizer" << std::endl;
         return false;
     }
 

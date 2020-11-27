@@ -3,6 +3,12 @@
 #include <d3d11.h>
 #include <iostream>
 
+struct ConstantBuffer {
+	struct {
+		float element[4][4];
+	}transform;
+};
+
 bool SetupD3D11(UINT width,
 	UINT height,
 	HWND wnd,
@@ -12,4 +18,5 @@ bool SetupD3D11(UINT width,
 	ID3D11RenderTargetView*& renderTarget,
 	ID3D11Texture2D*& dsTexture,
 	ID3D11DepthStencilView*& dsView,
-	D3D11_VIEWPORT& viewPort);
+	D3D11_VIEWPORT& viewPort,
+	ID3D11RasterizerState*& pRS);
