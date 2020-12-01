@@ -147,6 +147,16 @@ Matrix4x4 Matrix4x4::operator*(float mat[4][4])
 
 }
 
+vec4 Matrix4x4::operator*(vec4 other)
+{
+    vec4 theReturn(mat[0][0] * other.getPoints()[0] + mat[1][0] * other.getPoints()[1] + mat[2][0] * other.getPoints()[2] + mat[3][0] * other.getPoints()[3],
+                   mat[0][1] * other.getPoints()[0] + mat[1][1] * other.getPoints()[1] + mat[2][1] * other.getPoints()[2] + mat[3][1] * other.getPoints()[3],
+                   mat[0][2] * other.getPoints()[0] + mat[1][2] * other.getPoints()[1] + mat[2][2] * other.getPoints()[2] + mat[3][2] * other.getPoints()[3],
+                   mat[0][3] * other.getPoints()[0] + mat[1][3] * other.getPoints()[1] + mat[2][3] * other.getPoints()[2] + mat[3][3] * other.getPoints()[3]
+        );
+    return vec4(theReturn);
+}
+
 void Matrix4x4::operator=(Matrix4x4 *other)
 {
     float** arr2d = other->GetMatrix();
@@ -161,7 +171,7 @@ void Matrix4x4::operator=(Matrix4x4 *other)
     delete[] arr2d;
 }
 
-float* Matrix4x4::operator*(vec4& other)
+/*float* Matrix4x4::operator*(vec4& other)
 {
     float *array4x4 = new float[4];
 
@@ -169,7 +179,7 @@ float* Matrix4x4::operator*(vec4& other)
          array4x4[x] = mat[0][x] * other.getPoints()[x] + mat[1][x] * other.getPoints()[x] + mat[2][x] * other.getPoints()[x];
     }
     return array4x4;
-}
+}*/
 
 float** Matrix4x4::GetMatrix()
 {

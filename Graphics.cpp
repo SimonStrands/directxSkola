@@ -19,13 +19,45 @@ void Graphics::keyboardDebug()
 	{
 		scale -= 0.001f;
 	}
+	if (GetKeyState('F') & 0x8000) {
+		c -= 0.001f;
+		getVertexBuffer();
+	}
+}
+
+void Graphics::getVertexBuffer()
+{
+	D3D11_MAPPED_SUBRESOURCE resource;
+	vertex triangles[] =
+	{
+		{{-0.25f, -0.5f, 0.0f  - c }, {1,0,0}},
+		{{0.25f,  -0.5f, 0.0f  - c }, {0,1,0}},
+		{{-0.25f,   0.5f, 0.0f - c}, {0,0,1}},
+
+
+		{{0.26f,   0.5f, 0.0f - c}, {1,1,1}},
+		{{0.26f,  -0.5f, 0.0f - c}, {1,1,1}},
+		{{-0.24f, 0.5f, 0.0f - c},	{1,1,1}},
+	};
+
+	immediateContext->Map(vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+	memcpy(resource.pData, &triangles, sizeof(triangles));
+	immediateContext->Unmap(vertexBuffer, 0);
+
+	ZeroMemory(&resource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+
 }
 
 void Graphics::debugcd()
 {
 	float **ma2d = makeToCb.GetMatrix();
 	printf("\n");
-	for (int x = 0; x < 4; x++) {
+	vec4 *test = new vec4(-0.25f, -0.5f, 0.0f , 1.0f);
+	vec4 test2 = makeToCb * (*test);
+	for (int i = 0; i < 4; i++) {
+		printf("%f", test2.getPoints()[i]);
+	}
+	/*for (int x = 0; x < 4; x++) {
 		for (int y = 0; y < 4; y++) {
 			printf("%f ", ma2d[x][y]);
 		}
@@ -33,7 +65,7 @@ void Graphics::debugcd()
 	}
 	for (int i = 0; i < 4; i++) {
 		delete[] ma2d[i];
-	}
+	}*/
 	delete[] ma2d;
 }
 
@@ -41,17 +73,50 @@ bool Graphics::CreateVertexBuffer()
 {
 	vertex triangles[] =
 	{ 
-		{{-0.25f, -0.5f, 0.0f}, {1,0,0}},
-		{{0.25f,  -0.5f, 0.0f}, {0,1,0}},
-		{{-0.25f,   0.5f, 0.0f}, {0,0,1}},
+		{{-0.1f,-0.1f, 0.5f},{1,0,0}},
+		{{-0.1f, 0.1f, 0.5f},{1,0,0}},//1
+		{{-0.11f,-0.1f, 0.5f},{1,0,0}},
+
+		{{-0.1f,-0.1f, 0.5f},{0,1,0}},
+		{{-0.1f,-0.1f, 0.75f},{0,1,0}},//2
+		{{-0.11f,-0.11f, 0.51f},{0,1,0}},
+
+		{{-0.1f,-0.1f, 0.5f},{0,0,1}},
+		{{ 0.1f,-0.1f, 0.5f},{0,0,1}},//3
+		{{-0.11f,-0.11f, 0.51f},{0,0,1}},
+
+		{{ 0.1f,-0.1f, 0.5f},{0,1,1}},
+		{{ 0.1f,-0.1f, 0.75f},{0,1,1}},//4
+		{{ 0.11f,-0.11f, 0.51f},{0,1,1}},
+
+		{{ 0.1f,-0.1f, 0.5f},{1,0,1}},
+		{{ 0.1f, 0.1f, 0.5f},{1,0,1}},//5
+		{{ 0.11f,-0.11f, 0.51f},{1,0,1}},
+
+		{{ 0.1f,-0.1f, 0.75f},{1,1,1}},
+		{{ 0.1f, 0.1f, 0.75f},{1,1,1}},//6
+		{{ 0.11f,-0.11f, 0.76f},{1,1,1}},
+
+		{{ 0.1f,-0.1f, 0.75f},{1,1,1}},
+		{{ -0.1f,-0.1f, 0.75f},{1,1,1}},//7
+		{{ 0.11f,-0.11f, 0.76f},{1,1,1}},
+
+		{{ -0.1f,-0.1f, 0.75f},{1,1,1}},
+		{{ -0.1f,0.1f, 0.75f},{1,1,1}},//8
+		{ { -0.11f,-0.11f, 0.76f},{1,1,1}},
+		/*{{-0.25f, -0.5f, 1.5f}, {1,0,0}},
+		{{0.25f,  -0.5f, 1.5f}, {0,1,0}},
+		{{-0.25f,   0.5f, 1.5f}, {0,0,1}},
 		
 		
-		{{0.26f,   0.5f, 0.0f}, {1,1,1}},
-		{{0.26f,  -0.5f, 0.0f}, {1,1,1}},
-		{{-0.24f, 0.5f, 0.0f},	{1,1,1}},
+		{{0.26f,   0.5f, 0.5f}, {1,1,1}},
+		{{0.26f,  -0.5f, 0.5f}, {1,1,1}},
+		{{-0.24f, 0.5f, 0.5f},	{1,1,1}},*/
 	};
 
 	D3D11_BUFFER_DESC bDesc = {};
+	nrOfTriangles = ARRAYSIZE(triangles);
+	//nrOfTriangles = 3;
 	bDesc.ByteWidth = sizeof(vertex) * ARRAYSIZE(triangles);
 	bDesc.Usage = D3D11_USAGE_DYNAMIC;
 	bDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -140,7 +205,6 @@ bool Graphics::worldMatrix()
 	if (GetKeyState('O') & 0x8000)
 	{
 		if (!pressed) {
-			
 			debugcd();
 		}
 		pressed = true;
@@ -158,8 +222,18 @@ bool Graphics::worldMatrix()
 	return true;
 }
 
+void Graphics::SetTrianglePos()
+{
+	TrianglePos = new vec3 * [nrOfTriangles];
+	TrianglePos[0] = new vec3(0.1f,0.1f,0.1f);
+	for (int i = 1; i < nrOfTriangles; i++) {
+		TrianglePos[i] = new vec3(0, 0, 0);
+	}
+}
+
 bool Graphics::Rotation()
 {	
+	// a Y rotation
 	float rot[4][4] = {
 			{std::cos(yRot), 0.0f, -std::sin(yRot), 0.0f },
 			{0.0f,			 1.0f,	0.0f,			 0.0f},
@@ -186,25 +260,40 @@ bool Graphics::Scale()
 
 bool Graphics::Translate()
 {
+	//for moving the triangle
+	//translate position of triangle to origin then back to original position
 	
-	// need to get xyz value on triangle
-	//const float zInv = 1.0f / cbd.transform.element[2][2];
-	//cbd.transform.element[0][0] = (cbd.transform.element[0][0] * zInv + 1.0f);
-	//cbd.transform.element[1][1] = (-cbd.transform.element[1][1] * zInv + 1.0f);
 	cbd.transform.element[2][2] = 0;
 	//printf("%f", (cbd.transform.element[0][0] * zInv + 1.0f));
 
 	return true;
 }
 
+bool Graphics::Projection()
+{
 
+	return false;
+}
+
+bool Graphics::ScreenSpaceToPubeSpace()
+{
+	/*
+	zinv = 1 / v.z;
+	v.x = (v.x * zInv + 1) * screenWIdht / 2;
+	v.y = (-v.y * zInv + 1) * screenHeight/2;
+	*/
+
+	return true;
+}
 
 Graphics::Graphics(UINT WIDTH, UINT HEIGHT, HWND &wnd):
 	makeToCb(cbd.transform.element)
 {
+	screenHeight = (int)HEIGHT;
+	screenWidth = (int)WIDTH;
 	yRot = 0;
 	scale = 1;
-	nrOfTriangles = 2;
+	nrOfTriangles = 3;
 	g_pConstantBuffer = NULL;
 	
 	inputLayout = nullptr; pShader = nullptr; vShader = nullptr; vertexBuffer = nullptr;
@@ -222,6 +311,17 @@ Graphics::Graphics(UINT WIDTH, UINT HEIGHT, HWND &wnd):
 		std::cerr << "cant set up" << std::endl;
 		delete this;
 	}
+	UINT strid = sizeof(vertex);
+	UINT offset = 0;
+	immediateContext->VSSetShader(vShader, nullptr, 0);
+	immediateContext->PSSetShader(pShader, nullptr, 0);
+	immediateContext->IASetVertexBuffers(0, 1, &vertexBuffer, &strid, &offset);
+	immediateContext->RSSetViewports(1, &viewPort);
+	immediateContext->OMSetRenderTargets(1, &renderTarget, dsView);
+	immediateContext->RSSetState(pRS);
+	immediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
+	immediateContext->IASetInputLayout(inputLayout);
+	immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 }
 
 Graphics::~Graphics()
@@ -276,17 +376,7 @@ void Graphics::Render()
 	immediateContext->ClearDepthStencilView(dsView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 	//alot of memory leaks
 	worldMatrix();
-	UINT strid = sizeof(vertex);
-	UINT offset = 0;
-	immediateContext->RSSetState(pRS);
-	immediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
-	immediateContext->IASetVertexBuffers(0, 1, &vertexBuffer, &strid, &offset);
-	immediateContext->IASetInputLayout(inputLayout);
-	immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-	immediateContext->VSSetShader(vShader, nullptr, 0);
-	immediateContext->RSSetViewports(1, &viewPort);
-	immediateContext->PSSetShader(pShader, nullptr, 0);
-	immediateContext->OMSetRenderTargets(1, &renderTarget, dsView);
+	
 	for (int i = 0; i < nrOfTriangles; i++) {
 		immediateContext->Draw(3, (i) * 3);
 	}

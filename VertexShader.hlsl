@@ -11,13 +11,14 @@ struct VertexShaderOutput {
 cbuffer CBuf
 {
 	row_major matrix transform;
-	float4 movement;
 };
 
 VertexShaderOutput main(VertexShaderInput input) {
 	VertexShaderOutput output;
 	output.position = mul(float4(input.position, 1.0f), transform);
-	//output.position = mul(float4(input.position, 1.0f),movement);
+	//output.position.x = (output.position.x / output.position.z);
+	//output.position.y = (-output.position.y / output.position.z);
+	output.position.z = 0.5f;
 	output.color = input.color;
 	return output;
 }

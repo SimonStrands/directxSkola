@@ -10,8 +10,9 @@ public:
 	Matrix4x4(float** mat);
 	Matrix4x4 operator*(Matrix4x4 &other);
 	Matrix4x4 operator*(float mat[4][4]);
+	vec4 operator*(vec4 other);
 	void operator=(Matrix4x4 *other);
-	float* operator*(vec4 &other);
+	//float* operator*(vec4 &other);
 	float** GetMatrix();
 private:
 	float mat[4][4] = {

@@ -7,14 +7,13 @@
 /* End of File */
 //what to do
 //projection Transformation
-//make gpu get transformation data
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	const UINT WIDTH = 1024;
-	const UINT HEIGHT = 576;
+	const UINT WIDTH = 1080;
+	const UINT HEIGHT = 920;
 	HWND wnd;
 
 	std::cout << "hello" << std::endl;
