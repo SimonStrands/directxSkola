@@ -3,12 +3,32 @@
 #include "plHelper.h"
 #include "D311Helper.h"
 #include "mat.h"
+#include "Light.h"
+#include <DirectXMath.h>
+#include "deltaTime.h"
 
-struct cb {
+
+struct Vcb {
 	struct {
 		float element[4][4];
 	}transform;
+	struct {
+		float element[4][4];
+	}view;
+	struct {
+		float element[4][4];
+	}projection;
 };
+
+struct Pcb {
+	struct {
+		float element[4];
+	}lightPos;
+	struct {
+		float element[4];
+	}cameraPos;
+};
+
 
 class Graphics {
 
@@ -20,14 +40,36 @@ private:
 	void keyboardDebug();
 	bool pressed = false;
 private:
-	cb cbd = {
-		{
+	Vcb vcbd = {
+		{//transform
 			1.0f,0.0f,0.0f,0.0f,
 			0.0f,1.0f,0.0f,0.0f,
 			0.0f,0.0f,1.0f,0.0f,
 			0.0f,0.0f,0.0f,1.0f,
-		}
+		},
+		{//view
+			1.0f,0.0f,0.0f,0.0f,
+			0.0f,1.0f,0.0f,0.0f,
+			0.0f,0.0f,1.0f,0.0f,
+			0.0f,0.0f,0.0f,1.0f,
+		},
+		{//projection
+			1.0f,0.0f,0.0f,0.0f,
+			0.0f,1.0f,0.0f,0.0f,
+			0.0f,0.0f,1.0f,0.0f,
+			0.0f,0.0f,0.0f,1.0f,
+		},
+		
 	};
+	Pcb pcbd = {
+		{//lightPos
+			1,1,1,1,
+		},
+		{
+			0,0,1,1,
+		},
+	};
+
 	ID3D11Device* device;
 	ID3D11DeviceContext* immediateContext;
 	IDXGISwapChain* swapChain;
@@ -39,26 +81,36 @@ private:
 	ID3D11Buffer* vertexBuffer;
 	ID3D11VertexShader* vShader;
 	ID3D11PixelShader* pShader;
-	ID3D11Buffer* g_pConstantBuffer;
+	ID3D11Buffer* Vg_pConstantBuffer;
+	ID3D11Buffer* Pg_pConstantBuffer;
 	ID3D11RasterizerState* pRS;
-	
-	Matrix4x4 makeToCb;//worldMatrix 
-	vec3 **TrianglePos;
 
-	void SetTrianglePos();
-	bool Rotation();
-	bool Scale();
-	bool Translate();
-	bool Projection();
-	bool ScreenSpaceToPubeSpace();
+	ID3D11Texture2D* tex;
+	ID3D11ShaderResourceView* texSRV;
+	ID3D11SamplerState* sampler;
+	
+	Matrix4x4 lightMatrix;
+	Matrix4x4 makeToCb;//worldMatrix 
+
+	void Projection();
+	void View();
+
+	vec32 quadpos;
+	vec32 quadRoationPos;
+
+	PointLight light;
+	DeltaTime dt;
+	float speed;
 
 	int nrOfTriangles;
 	float yRot;
 	float scale;
+	float xCamPos, yCamPos, zCamPos;
 	int screenWidth, screenHeight;
+	float fov, ratio, farPlane, nearPlane;
+	const int WIDHT, HEIGHT;
 protected:
 	bool CreateVertexBuffer();
-	bool movements(float x);
 	bool worldMatrix();
 public:
 	Graphics(UINT WIDTH, UINT HEIGHT, HWND& wnd);

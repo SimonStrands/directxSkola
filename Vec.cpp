@@ -92,6 +92,14 @@ void vec3::Normalize()
 	this->z = (float)(z / i);
 }
 
+vec3 vec3::X(const vec3& other)
+{
+	float x = (this->y * other.z) - (this->z * other.y);
+	float y = (this->z * other.x) - (this->x * other.z);
+	float z = (this->x * other.y) - (this->y * other.x);
+	return vec3(x,y,z);
+}
+
 float vec3::operator*(vec3& other)
 {
 	return(this->x * other.x + this->y * other.y + this->z * other.z);

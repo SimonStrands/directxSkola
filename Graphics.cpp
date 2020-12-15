@@ -1,50 +1,84 @@
 #include "Graphics.h"
 #include <wrl.h>
+#include "Triangle.h"
+
+const float PI = 3.1415926535897f;
 
 void Graphics::keyboardDebug()
 {
 	if (GetKeyState('A') & 0x8000)
 	{
-		yRot += 0.001f;
+		yRot += speed * (float)dt.dt();
 	}
 	if (GetKeyState('D') & 0x8000)
 	{
-		yRot -= 0.001f;
+		yRot -= speed * (float)dt.dt();
 	}
 	if (GetKeyState('W') & 0x8000)
 	{
-		scale += 0.001f;
+		scale += speed * (float)dt.dt();
 	}
 	if (GetKeyState('S') & 0x8000)
 	{
-		scale -= 0.001f;
+		scale -= speed * (float)dt.dt();
 	}
 	if (GetKeyState('F') & 0x8000) {
 		c -= 0.001f;
 		getVertexBuffer();
 	}
+	if (GetKeyState(VK_DOWN) & 0x8000)
+	{
+		yCamPos -= speed * (float)dt.dt();
+	}
+	if (GetKeyState(VK_UP) & 0x8000)
+	{
+		yCamPos += speed * (float)dt.dt();
+	}
+	if (GetKeyState(VK_LEFT) & 0x8000)
+	{
+		xCamPos -= speed * (float)dt.dt();
+	}
+	if (GetKeyState(VK_RIGHT) & 0x8000)
+	{
+		xCamPos += speed * (float)dt.dt();
+	}
+	if (GetKeyState(VK_CONTROL) & 0x8000)
+	{
+		zCamPos += speed * (float)dt.dt();
+	}
+	if (GetKeyState(VK_SHIFT) & 0x8000)
+	{
+		zCamPos -= speed * (float)dt.dt();
+	}
+	if (yRot > 6.281887f) {
+		yRot -= 6.281887f;
+	}
+	else if (yRot < 6.281887f) {
+		yRot += 6.281887f;
+	}
+
 }
 
 void Graphics::getVertexBuffer()
 {
-	D3D11_MAPPED_SUBRESOURCE resource;
-	vertex triangles[] =
-	{
-		{{-0.25f, -0.5f, 0.0f  - c }, {1,0,0}},
-		{{0.25f,  -0.5f, 0.0f  - c }, {0,1,0}},
-		{{-0.25f,   0.5f, 0.0f - c}, {0,0,1}},
-
-
-		{{0.26f,   0.5f, 0.0f - c}, {1,1,1}},
-		{{0.26f,  -0.5f, 0.0f - c}, {1,1,1}},
-		{{-0.24f, 0.5f, 0.0f - c},	{1,1,1}},
-	};
-
-	immediateContext->Map(vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
-	memcpy(resource.pData, &triangles, sizeof(triangles));
-	immediateContext->Unmap(vertexBuffer, 0);
-
-	ZeroMemory(&resource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+	//D3D11_MAPPED_SUBRESOURCE resource;
+	//vertex triangles[] =
+	//{
+	//	{{-0.25f, -0.5f, 0.0f  - c }, {1,0,0}},
+	//	{{0.25f,  -0.5f, 0.0f  - c }, {0,1,0}},
+	//	{{-0.25f,   0.5f, 0.0f - c}, {0,0,1}},
+	//
+	//
+	//	{{0.26f,   0.5f, 0.0f - c}, {1,1,1}},
+	//	{{0.26f,  -0.5f, 0.0f - c}, {1,1,1}},
+	//	{{-0.24f, 0.5f, 0.0f - c},	{1,1,1}},
+	//};
+	//
+	//immediateContext->Map(vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+	//memcpy(resource.pData, &triangles, sizeof(triangles));
+	//immediateContext->Unmap(vertexBuffer, 0);
+	//
+	//ZeroMemory(&resource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 
 }
 
@@ -68,59 +102,26 @@ void Graphics::debugcd()
 	}*/
 	delete[] ma2d;
 }
-
 bool Graphics::CreateVertexBuffer()
 {
 	vertex triangles[] =
 	{ 
-		{{-0.1f,-0.1f, 0.5f},{1,0,0}},
-		{{-0.1f, 0.1f, 0.5f},{1,0,0}},//1
-		{{-0.11f,-0.1f, 0.5f},{1,0,0}},
-
-		{{-0.1f,-0.1f, 0.5f},{0,1,0}},
-		{{-0.1f,-0.1f, 0.75f},{0,1,0}},//2
-		{{-0.11f,-0.11f, 0.51f},{0,1,0}},
-
-		{{-0.1f,-0.1f, 0.5f},{0,0,1}},
-		{{ 0.1f,-0.1f, 0.5f},{0,0,1}},//3
-		{{-0.11f,-0.11f, 0.51f},{0,0,1}},
-
-		{{ 0.1f,-0.1f, 0.5f},{0,1,1}},
-		{{ 0.1f,-0.1f, 0.75f},{0,1,1}},//4
-		{{ 0.11f,-0.11f, 0.51f},{0,1,1}},
-
-		{{ 0.1f,-0.1f, 0.5f},{1,0,1}},
-		{{ 0.1f, 0.1f, 0.5f},{1,0,1}},//5
-		{{ 0.11f,-0.11f, 0.51f},{1,0,1}},
-
-		{{ 0.1f,-0.1f, 0.75f},{1,1,1}},
-		{{ 0.1f, 0.1f, 0.75f},{1,1,1}},//6
-		{{ 0.11f,-0.11f, 0.76f},{1,1,1}},
-
-		{{ 0.1f,-0.1f, 0.75f},{1,1,1}},
-		{{ -0.1f,-0.1f, 0.75f},{1,1,1}},//7
-		{{ 0.11f,-0.11f, 0.76f},{1,1,1}},
-
-		{{ -0.1f,-0.1f, 0.75f},{1,1,1}},
-		{{ -0.1f,0.1f, 0.75f},{1,1,1}},//8
-		{ { -0.11f,-0.11f, 0.76f},{1,1,1}},
-		/*{{-0.25f, -0.5f, 1.5f}, {1,0,0}},
-		{{0.25f,  -0.5f, 1.5f}, {0,1,0}},
-		{{-0.25f,   0.5f, 1.5f}, {0,0,1}},
+		{{-0.25f - quadpos.x,  0.5f - quadpos.y, 0.f -quadpos.z}, {0.0f, 0.0f}, {0.0f,0.0f,1.0f,0.0f}},
+		{{-0.25f - quadpos.x, -0.5f - quadpos.y, 0.f -quadpos.z}, {0.0f, 1.0f}, {0.0f,0.0f,1.0f,0.0f}},
+		{{ 0.25f - quadpos.x, -0.5f - quadpos.y, 0.f -quadpos.z}, {1.0f, 1.0f}, {0.0f,0.0f,1.0f,0.0f}},
 		
 		
-		{{0.26f,   0.5f, 0.5f}, {1,1,1}},
-		{{0.26f,  -0.5f, 0.5f}, {1,1,1}},
-		{{-0.24f, 0.5f, 0.5f},	{1,1,1}},*/
+		{{ 0.25f - quadpos.x,  0.5f - quadpos.y, 0.f - quadpos.z}, {1.0f,0.0f}, {0.0f,0.0f,1.0f,0.0f}},
+		{{ 0.25f - quadpos.x, -0.5f - quadpos.y, 0.f - quadpos.z}, {1.0f,1.0f}, {0.0f,0.0f,1.0f,0.0f}},
+		{{-0.25f - quadpos.x,  0.5f - quadpos.y, 0.f - quadpos.z}, {0.0f,0.0f}, {0.0f,0.0f,1.0f,0.0f}},
 	};
 
+
 	D3D11_BUFFER_DESC bDesc = {};
-	nrOfTriangles = ARRAYSIZE(triangles);
-	//nrOfTriangles = 3;
+	nrOfTriangles = ARRAYSIZE(triangles) / 3;
 	bDesc.ByteWidth = sizeof(vertex) * ARRAYSIZE(triangles);
 	bDesc.Usage = D3D11_USAGE_DYNAMIC;
 	bDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	//bDesc.CPUAccessFlags = 0;
 	bDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	bDesc.MiscFlags = 0;
 	bDesc.StructureByteStride = 0;
@@ -136,9 +137,9 @@ bool Graphics::CreateVertexBuffer()
 		printf("failed");
 		return false;
 	}
-
+	//create vertexConstantBuffer
 	D3D11_BUFFER_DESC CbDesc;
-	CbDesc.ByteWidth = sizeof(ConstantBuffer);
+	CbDesc.ByteWidth = sizeof(Vcb);
 	CbDesc.Usage = D3D11_USAGE_DYNAMIC;
 	CbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	CbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -146,62 +147,57 @@ bool Graphics::CreateVertexBuffer()
 	CbDesc.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA InitData;
-	InitData.pSysMem = &cbd;
+	InitData.pSysMem = &vcbd;
 	InitData.SysMemPitch = 0;
 	InitData.SysMemSlicePitch = 0;
 
+	hr = device->CreateBuffer(&CbDesc, &InitData, &Vg_pConstantBuffer);
+	if (FAILED(hr)) {
+		printf("failed");
+		return false;
+	}
+	//create PixelConstantBuffer
+	CbDesc.ByteWidth = sizeof(Pcb);
+	InitData.pSysMem = &pcbd;
+	hr = device->CreateBuffer(&CbDesc, &InitData, &Pg_pConstantBuffer);
 
-	hr = device->CreateBuffer(&CbDesc, &InitData, &g_pConstantBuffer);
 	return !FAILED(hr);
 
 }
 
-bool Graphics::movements(float x)
-{
-	D3D11_MAPPED_SUBRESOURCE resource;
-	cbd = {
-		{
-			x,0.0f,0.0f,0.0f,
-			0.0f,x,0.0f,0.0f,
-			0.0f,0.0f,x,0.0f,
-			0.0f,0.0f,0.0f,1.0f,
-		}
-	};
-	immediateContext->Map(g_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
-	memcpy(resource.pData, &cbd, sizeof(cb));
-	immediateContext->Unmap(g_pConstantBuffer, 0);
-	
-
-	ZeroMemory(&resource, sizeof(D3D11_MAPPED_SUBRESOURCE));
-
-	return true;
-}
-
 bool Graphics::worldMatrix()
 {
-	D3D11_MAPPED_SUBRESOURCE resource;
+	
 	keyboardDebug();
-	if (!Rotation()) {//kinda done
-		return false;
+	View();
+	// a Y rotation
+	if (GetKeyState(VK_SPACE) & 0x8000)
+	{
+		printf("yrot = %f\n", yRot);
 	}
-	if (!Scale()) {
-		return false;
-	}
-	float** arr2d = makeToCb.GetMatrix();
-	for (int x = 0; x < 4; x++) {
-		for (int y = 0; y < 4; y++) {
-			cbd.transform.element[x][y] = arr2d[x][y];//this shit
-		}
-	}
-	for (int i = 0; i < 4; i++) {
-		delete[] arr2d[i];
-	}
-	delete[] arr2d;
-	scale = 1;
-	yRot = 0;
-	//if (!Translate()) {
-	//	return false;
-	//}
+	float rot[4][4] = {
+			{std::cos(yRot), 0.0f, std::sin(yRot), 0.0f },
+			{0.0f,			 1.0f,	0.0f,			 0.0f},
+			{-std::sin(yRot),0.0f, std::cos(yRot), 0.0f	  },
+			{0.0f,			 0.0f,			 0.0f,  1.0f }
+	};
+	float scal[4][4] = {
+			{scale,0.0f,0.0f,0.0f	},
+			{0.0f,scale,0.0f,0.0f	},
+			{0.0f,0.0f,scale,0.0f	},
+			{0.0f,0.0f,0.0f,1.0f	},
+
+	};
+	float trans[4][4]{
+		{1,    0,    0,	   0},
+		{0,    1,    0,	   0},
+		{0,    0,    1,	   0},
+		{quadRoationPos.x,    quadRoationPos.y,    quadRoationPos.z,    1},
+	};
+
+	//makeToCb = Matrix4x4(eh1) * rot * eh2 * scal * trans;
+	makeToCb =  Matrix4x4(rot) * Matrix4x4(trans) * Matrix4x4(scal);
+
 	if (GetKeyState('O') & 0x8000)
 	{
 		if (!pressed) {
@@ -212,97 +208,114 @@ bool Graphics::worldMatrix()
 	else {
 		pressed = false;
 	}
-	
-	immediateContext->Map(g_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
-	memcpy(resource.pData, &cbd, sizeof(cb));
-	immediateContext->Unmap(g_pConstantBuffer, 0);
 
+	//setting cb
+	float** arr2d = makeToCb.GetMatrix();
+	for (int x = 0; x < 4; x++) {
+		for (int y = 0; y < 4; y++) {
+			vcbd.transform.element[x][y] = arr2d[x][y];
+		}
+	}
+	for (int i = 0; i < 4; i++) {
+		delete[] arr2d[i];
+	}
+	delete[] arr2d;
+
+	//Light
+	pcbd.lightPos.element[0] = light.getPos().x;
+	pcbd.lightPos.element[1] = light.getPos().y;
+	pcbd.lightPos.element[2] = light.getPos().z;
+	pcbd.lightPos.element[3] = 1;
+	//make this in to screen space
+	//vec4 camPos(xCamPos, yCamPos, zCamPos, 1);
+	//vec4 ah = makeToCb * camPos;
+	pcbd.cameraPos.element[0] = xCamPos;
+	pcbd.cameraPos.element[1] = yCamPos;
+	pcbd.cameraPos.element[2] = zCamPos + 1;
+	pcbd.cameraPos.element[3] = 1  ;
+
+
+	D3D11_MAPPED_SUBRESOURCE resource;
+
+	immediateContext->Map(Vg_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+	memcpy(resource.pData, &vcbd, sizeof(Vcb));
+	immediateContext->Unmap(Vg_pConstantBuffer, 0);
+	ZeroMemory(&resource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+
+	immediateContext->Map(Pg_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+	memcpy(resource.pData, &pcbd, sizeof(Pcb));
+	immediateContext->Unmap(Pg_pConstantBuffer, 0);
 	ZeroMemory(&resource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 
 	return true;
 }
 
-void Graphics::SetTrianglePos()
+void Graphics::Projection()
 {
-	TrianglePos = new vec3 * [nrOfTriangles];
-	TrianglePos[0] = new vec3(0.1f,0.1f,0.1f);
-	for (int i = 1; i < nrOfTriangles; i++) {
-		TrianglePos[i] = new vec3(0, 0, 0);
+	float arr[4][4] = 
+	{
+		{1/ ratio * tan(fov/2), 0, 0, 0},
+		{0, tan(fov / 2), 0, 0},
+		{0, 0, farPlane/(farPlane-nearPlane), 1},
+		{0, 0, -(farPlane*nearPlane)/farPlane-nearPlane, 0},
+	};
+	for (int x = 0; x < 4; x++) {
+		for (int y = 0; y < 4; y++) {
+			vcbd.projection.element[x][y] = arr[x][y];
+		}
 	}
 }
 
-bool Graphics::Rotation()
-{	
-	// a Y rotation
-	float rot[4][4] = {
-			{std::cos(yRot), 0.0f, -std::sin(yRot), 0.0f },
-			{0.0f,			 1.0f,	0.0f,			 0.0f},
-			{std::sin(yRot),0.0f, std::cos(yRot), 0.0f	  },
-			{0.0f,			 0.0f,			 0.0f,  1.0f }
+void Graphics::View()
+{
+	float arr[4][4] = {
+		{1.0f,0.0f,0.0f,0.0f},
+		{0.0f,1.0f,0.0f,0.0f},
+		{0.0f,0.0f,1.0f,0.0f},
+		{xCamPos,yCamPos,zCamPos,1.0f}
 	};
-	makeToCb = (makeToCb * rot);
-	return true;
+	for (int x = 0; x < 4; x++) {
+		for (int y = 0; y < 4; y++) {
+			vcbd.view.element[x][y] = arr[x][y];
+		}
+	}
 }
 
-bool Graphics::Scale()
-{
-	float rot[4][4] = {
 
-			{scale,0.0f,0.0f,0.0f	},
-			{0.0f,scale,0.0f,0.0f	},
-			{0.0f,0.0f,scale,0.0f	},
-			{0.0f,0.0f,0.0f,1.0f	},
-
-	};
-	makeToCb = (makeToCb * rot);
-	return true;
-}
-
-bool Graphics::Translate()
-{
-	//for moving the triangle
-	//translate position of triangle to origin then back to original position
-	
-	cbd.transform.element[2][2] = 0;
-	//printf("%f", (cbd.transform.element[0][0] * zInv + 1.0f));
-
-	return true;
-}
-
-bool Graphics::Projection()
-{
-
-	return false;
-}
-
-bool Graphics::ScreenSpaceToPubeSpace()
-{
-	/*
-	zinv = 1 / v.z;
-	v.x = (v.x * zInv + 1) * screenWIdht / 2;
-	v.y = (-v.y * zInv + 1) * screenHeight/2;
-	*/
-
-	return true;
-}
-
-Graphics::Graphics(UINT WIDTH, UINT HEIGHT, HWND &wnd):
-	makeToCb(cbd.transform.element)
+Graphics::Graphics(UINT WIDTH, UINT HEIGHT, HWND& wnd) :
+	WIDHT(WIDTH),
+	HEIGHT(HEIGHT),
+	makeToCb(vcbd.transform.element),
+	speed(2.5f),
+	light(vec32(0,0,1.f)),
+	quadpos(0,0,0),
+	quadRoationPos(0.5f,0,0)
 {
 	screenHeight = (int)HEIGHT;
 	screenWidth = (int)WIDTH;
+	fov = 1.45f;
+	ratio = 16 / 9;//just made something up
+	farPlane = 40;
+	nearPlane = 0.1f;
+	
+	xCamPos = yCamPos = 0.0; zCamPos = 2.0f;
 	yRot = 0;
 	scale = 1;
-	nrOfTriangles = 3;
-	g_pConstantBuffer = NULL;
-	
-	inputLayout = nullptr; pShader = nullptr; vShader = nullptr; vertexBuffer = nullptr;
+	nrOfTriangles = 0;
+
+	Vg_pConstantBuffer = NULL;
+	Pg_pConstantBuffer = NULL;
+	inputLayout = nullptr; pShader = nullptr; vShader = nullptr; vertexBuffer = nullptr; texSRV = nullptr;
+	//setting up projection matrix
+	Projection();
+	View();
+	//SetTrianglePos();
 	if (!SetupD3D11(WIDTH, HEIGHT, wnd, device, immediateContext, swapChain, renderTarget, dsTexture, dsView, viewPort, pRS))
 	{
 		std::cerr << "cant set up" << std::endl;
 		delete this;
 	}
-	if (!SetupPipeline(device, vertexBuffer, vShader, pShader, inputLayout))
+	if (!SetupPipeline(device, vertexBuffer, vShader, pShader, inputLayout, tex, texSRV, sampler))
 	{
 		std::cerr << "cant set up" << std::endl;
 		delete this;
@@ -311,17 +324,22 @@ Graphics::Graphics(UINT WIDTH, UINT HEIGHT, HWND &wnd):
 		std::cerr << "cant set up" << std::endl;
 		delete this;
 	}
+	
 	UINT strid = sizeof(vertex);
 	UINT offset = 0;
+	immediateContext->PSSetShaderResources(0, 1, &texSRV);
+	immediateContext->PSSetSamplers(0, 1, &sampler);
 	immediateContext->VSSetShader(vShader, nullptr, 0);
 	immediateContext->PSSetShader(pShader, nullptr, 0);
 	immediateContext->IASetVertexBuffers(0, 1, &vertexBuffer, &strid, &offset);
 	immediateContext->RSSetViewports(1, &viewPort);
 	immediateContext->OMSetRenderTargets(1, &renderTarget, dsView);
 	immediateContext->RSSetState(pRS);
-	immediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
+	immediateContext->VSSetConstantBuffers(0, 1, &Vg_pConstantBuffer);
+	immediateContext->PSSetConstantBuffers(0, 1, &Pg_pConstantBuffer);
 	immediateContext->IASetInputLayout(inputLayout);
 	immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	
 }
 
 Graphics::~Graphics()
@@ -356,12 +374,32 @@ Graphics::~Graphics()
 	if (device != nullptr) {
 		device->Release();
 	}
-	if (g_pConstantBuffer != nullptr) {
-		g_pConstantBuffer->Release();
+	if (Vg_pConstantBuffer != nullptr) {
+		Vg_pConstantBuffer->Release();
+	}
+	if (Pg_pConstantBuffer != nullptr) {
+		Pg_pConstantBuffer->Release();
 	}
 	if (pRS != nullptr) {
 		pRS->Release();
 	}
+	if (tex != nullptr) {
+		tex->Release();
+	}
+	if (texSRV != nullptr) {
+		texSRV->Release();
+	}
+	if (sampler != nullptr) {
+		sampler->Release();
+	}
+
+	//for (int i = 0; i < nrOfTriangles; i++) {
+	//	if (TrianglePos[i] != nullptr) {
+	//		delete[] TrianglePos[i];
+	//	}
+	//}
+	//delete[] TrianglePos[0];
+	//delete[] TrianglePos;
 }
 
 int Graphics::getNrOfTriangles()
@@ -371,111 +409,16 @@ int Graphics::getNrOfTriangles()
 void Graphics::Render()
 {
 	//clear background
+	dt.restartClock();
 	float clearColor[4] = { 0.1f,0.1f,0.1f,0 };
 	immediateContext->ClearRenderTargetView(renderTarget, clearColor);
 	immediateContext->ClearDepthStencilView(dsView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
-	//alot of memory leaks
+
 	worldMatrix();
 	
+
 	for (int i = 0; i < nrOfTriangles; i++) {
 		immediateContext->Draw(3, (i) * 3);
 	}
 	swapChain->Present(0, 0);
 }
-
-
-/*
-bool Graphics::RotateTriangleZ(float angle)
-{
-	cb = {
-		{
-			std::cos(angle),  std::sin(angle), 0.0f, 0.f,
-			-std::sin(angle), std::cos(angle), 0.f,  0.f,
-			0.f,              0.f,             1.f,  0.f,
-			0.0f,			  0.f,	           0.0f, 1.f,
-		}
-	};
-
-	D3D11_BUFFER_DESC CbDesc;
-	CbDesc.ByteWidth = sizeof(ConstantBuffer);
-	CbDesc.Usage = D3D11_USAGE_DYNAMIC;
-	CbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	CbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	CbDesc.MiscFlags = 0;
-	CbDesc.StructureByteStride = 0;
-
-	D3D11_SUBRESOURCE_DATA InitData;
-	InitData.pSysMem = &cb;
-	InitData.SysMemPitch = 0;
-	InitData.SysMemSlicePitch = 0;
-
-
-	HRESULT hr = device->CreateBuffer(&CbDesc, &InitData, &g_pConstantBuffer);
-	return true;
-}
-
-bool Graphics::RotateTriangleX(float angle)
-{
-	cb = {
-		{
-			1.f, 0.f,              0.f,             0.f,
-			0.f, std::cos(angle),  std::sin(angle), 0.f,
-			0.f, -std::sin(angle), std::cos(angle), 0.f,
-			0.f, 0.f,              0.f,             1.f,
-		}
-	};
-
-	D3D11_BUFFER_DESC CbDesc;
-	CbDesc.ByteWidth = sizeof(ConstantBuffer);
-	CbDesc.Usage = D3D11_USAGE_DYNAMIC;
-	CbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	CbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	CbDesc.MiscFlags = 0;
-	CbDesc.StructureByteStride = 0;
-
-	D3D11_SUBRESOURCE_DATA InitData;
-	InitData.pSysMem = &cb;
-	InitData.SysMemPitch = 0;
-	InitData.SysMemSlicePitch = 0;
-
-
-	HRESULT hr = device->CreateBuffer(&CbDesc, &InitData, &g_pConstantBuffer);
-	return true;
-}
-
-bool Graphics::RotateTriangleY(float angle)
-{
-	cb = {
-		{
-			std::cos(angle),  0.f, -std::sin(angle), 0.f,
-			 0.0f,            1.f, 0.f,				 0.f,
-			std::sin(angle),  0.f, std::cos(angle),  0.f,
-			0.f,              0.f, 0.f,              1.f,
-		}
-	};
-
-	D3D11_BUFFER_DESC CbDesc;
-	CbDesc.ByteWidth = sizeof(ConstantBuffer);
-	CbDesc.Usage = D3D11_USAGE_DYNAMIC;
-	CbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	CbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	CbDesc.MiscFlags = 0;
-	CbDesc.StructureByteStride = 0;
-
-	D3D11_SUBRESOURCE_DATA InitData;
-	InitData.pSysMem = &cb;
-	InitData.SysMemPitch = 0;
-	InitData.SysMemSlicePitch = 0;
-
-
-	HRESULT hr = device->CreateBuffer(&CbDesc, &InitData, &g_pConstantBuffer);
-	return true;
-}
-*/
-
-/*void test(ID3D11Buffer *&vertexBuffer, ID3D11DeviceContext*& immediateContext) {
-	D3D11_MAPPED_SUBRESOURCE resource;
-	immediateContext->Map(vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
-	memcpy(resource.pData, sourceData, vertexDataSize);
-	immediateContext->Unmap(vertexBuffer, 0);
-}*/

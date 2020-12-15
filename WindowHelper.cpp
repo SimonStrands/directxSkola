@@ -16,7 +16,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 bool SetupWindow(HINSTANCE instance, UINT width, UINT height, int nCmdShow, HWND& wnd)
 {
-    const wchar_t CLASS_NAME[] = L"Penisar";
+    const wchar_t CLASS_NAME[] = L"class name";
 
     WNDCLASS wc = {};
     wc.lpfnWndProc = WindowProc;
@@ -25,7 +25,7 @@ bool SetupWindow(HINSTANCE instance, UINT width, UINT height, int nCmdShow, HWND
 
     RegisterClass(&wc);
 
-    wnd = CreateWindowEx(0, CLASS_NAME, L"penis 2", WS_OVERLAPPEDWINDOW, 0, 0, width, height, nullptr, nullptr, instance, nullptr);
+    wnd = CreateWindowEx(0, CLASS_NAME, L"01100001 01101110 00100000 01100101 01100111 01100111 ", WS_OVERLAPPEDWINDOW, 0, 0, width, height, nullptr, nullptr, instance, nullptr);
 
     if (wnd == nullptr) {
         std::cerr << "cant create window" << std::endl;

@@ -8,7 +8,7 @@ public:
 	Matrix4x4(vec4 vec1, vec4 vec2, vec4 vec3, vec4 vec5);
 	Matrix4x4(float mat[4][4]);
 	Matrix4x4(float** mat);
-	Matrix4x4 operator*(Matrix4x4 &other);
+	Matrix4x4 operator*(Matrix4x4 other);
 	Matrix4x4 operator*(float mat[4][4]);
 	vec4 operator*(vec4 other);
 	void operator=(Matrix4x4 *other);

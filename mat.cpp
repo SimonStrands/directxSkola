@@ -116,7 +116,7 @@ Matrix4x4::Matrix4x4(float** mat)
     }
 }
 
-Matrix4x4 Matrix4x4::operator*(Matrix4x4& other)
+Matrix4x4 Matrix4x4::operator*(Matrix4x4 other)
 {
     float array4x4[4][4];
     float** array2d = other.GetMatrix();

@@ -3,12 +3,6 @@
 #include <d3d11.h>
 #include <iostream>
 
-struct ConstantBuffer {
-	struct {
-		float element[4][4];
-	}transform;
-};
-
 bool SetupD3D11(UINT width,
 	UINT height,
 	HWND wnd,
