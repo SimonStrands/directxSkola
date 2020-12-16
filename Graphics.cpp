@@ -163,14 +163,14 @@ bool Graphics::worldMatrix()
 	delete[] arr2d;
 
 	//Light
-	pcbd.lightPos.element[0] = xCamPos;
-	pcbd.lightPos.element[1] = yCamPos;
-	pcbd.lightPos.element[2] = zCamPos + 1;
+	pcbd.lightPos.element[0] = light.getPos().x;
+	pcbd.lightPos.element[1] = light.getPos().y;
+	pcbd.lightPos.element[2] = light.getPos().z;
 	pcbd.lightPos.element[3] = 1;
 
 	pcbd.cameraPos.element[0] = xCamPos;
 	pcbd.cameraPos.element[1] = yCamPos;
-	pcbd.cameraPos.element[2] = zCamPos + 1;
+	pcbd.cameraPos.element[2] = zCamPos;
 	pcbd.cameraPos.element[3] = 1  ;
 
 
