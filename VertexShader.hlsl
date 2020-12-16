@@ -21,22 +21,18 @@ cbuffer CBuf
 VertexShaderOutput main(VertexShaderInput input) {
 	VertexShaderOutput output;
 
-	float4x4 MVP = mul(mul(transform, view),projection);
-	float4x4 modelView = mul(transform, view);
-	output.fragpos = mul(float4(input.position,1.0f), modelView);
-	output.position = mul((float4((input.position), 1.0f)), MVP);
-	output.uv = input.uv;
-	//change normal with worldmatrix
-	output.normal = abs(mul(input.normal, modelView));
-	output.normal = normalize(output.normal.xyz);
+	//float4x4 modelView = mul(transform, view);
+	//float4x4 MVP = mul(mul(transform, view), projection);
+	//output.fragpos = mul(float4(input.position, 1.0f), modelView);
+	//output.position = mul((float4((input.position), 1.0f)), MVP);
+	//output.uv = input.uv;
+	//output.normal = normalize((abs(mul(input.normal, modelView))).xyz);
 	
-	/*float4x4 MVP = mul(mul(transform, view),projection);
+	float4x4 MVP = mul(mul(transform, view),projection);
 	output.fragpos = mul(float4(input.position,1.0f), transform);
 	output.position = mul((float4((input.position), 1.0f)), MVP);
 	output.uv = input.uv;
-	//change normal with worldmatrix
-	output.normal = abs(mul(input.normal, transform));
-	output.normal = normalize(output.normal.xyz);*/
+	output.normal = normalize((abs(mul(input.normal, transform))).xyz);
 	
 	return output;
 }
