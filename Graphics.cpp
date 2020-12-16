@@ -21,10 +21,6 @@ void Graphics::keyboardDebug()
 	{
 		scale -= speed * (float)dt.dt();
 	}
-	if (GetKeyState('F') & 0x8000) {
-		c -= 0.001f;
-		getVertexBuffer();
-	}
 	if (GetKeyState(VK_DOWN) & 0x8000)
 	{
 		yCamPos -= speed * (float)dt.dt();
@@ -58,49 +54,6 @@ void Graphics::keyboardDebug()
 
 }
 
-void Graphics::getVertexBuffer()
-{
-	//D3D11_MAPPED_SUBRESOURCE resource;
-	//vertex triangles[] =
-	//{
-	//	{{-0.25f, -0.5f, 0.0f  - c }, {1,0,0}},
-	//	{{0.25f,  -0.5f, 0.0f  - c }, {0,1,0}},
-	//	{{-0.25f,   0.5f, 0.0f - c}, {0,0,1}},
-	//
-	//
-	//	{{0.26f,   0.5f, 0.0f - c}, {1,1,1}},
-	//	{{0.26f,  -0.5f, 0.0f - c}, {1,1,1}},
-	//	{{-0.24f, 0.5f, 0.0f - c},	{1,1,1}},
-	//};
-	//
-	//immediateContext->Map(vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
-	//memcpy(resource.pData, &triangles, sizeof(triangles));
-	//immediateContext->Unmap(vertexBuffer, 0);
-	//
-	//ZeroMemory(&resource, sizeof(D3D11_MAPPED_SUBRESOURCE));
-
-}
-
-void Graphics::debugcd()
-{
-	//float **ma2d = makeToCb.GetMatrix();
-	printf("\n");
-	//vec4 *test = new vec4(-0.25f, -0.5f, 0.0f , 1.0f);
-	//vec4 test2 = makeToCb * (*test);
-	//for (int i = 0; i < 4; i++) {
-	//	printf("%f", test2.getPoints()[i]);
-	//}
-	/*for (int x = 0; x < 4; x++) {
-		for (int y = 0; y < 4; y++) {
-			printf("%f ", ma2d[x][y]);
-		}
-		printf("\n\n");
-	}
-	for (int i = 0; i < 4; i++) {
-		delete[] ma2d[i];
-	}*/
-	//delete[] ma2d;
-}
 bool Graphics::CreateVertexBuffer()
 {
 	vertex triangles[] =
@@ -196,17 +149,6 @@ bool Graphics::worldMatrix()
 
 	//makeToCb = Matrix4x4(eh1) * rot * eh2 * scal * trans;
 	makeToCb =  Matrix4x4(rot) * Matrix4x4(trans) * Matrix4x4(scal);
-
-	if (GetKeyState('O') & 0x8000)
-	{
-		if (!pressed) {
-			debugcd();
-		}
-		pressed = true;
-	}
-	else {
-		pressed = false;
-	}
 
 	//setting cb
 	float** arr2d = makeToCb.GetMatrix();

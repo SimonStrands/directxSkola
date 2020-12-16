@@ -35,8 +35,8 @@ class Graphics {
 private:
 	//Debug shit
 	float c = 0;
-	void getVertexBuffer();
-	void debugcd();
+	//void getVertexBuffer();
+	//void debugcd();
 	void keyboardDebug();
 	bool pressed = false;
 private:
