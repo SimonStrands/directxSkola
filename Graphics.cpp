@@ -1,6 +1,5 @@
 #include "Graphics.h"
 #include <wrl.h>
-#include "Triangle.h"
 
 const float PI = 3.1415926535897f;
 
@@ -84,13 +83,13 @@ void Graphics::getVertexBuffer()
 
 void Graphics::debugcd()
 {
-	float **ma2d = makeToCb.GetMatrix();
+	//float **ma2d = makeToCb.GetMatrix();
 	printf("\n");
-	vec4 *test = new vec4(-0.25f, -0.5f, 0.0f , 1.0f);
-	vec4 test2 = makeToCb * (*test);
-	for (int i = 0; i < 4; i++) {
-		printf("%f", test2.getPoints()[i]);
-	}
+	//vec4 *test = new vec4(-0.25f, -0.5f, 0.0f , 1.0f);
+	//vec4 test2 = makeToCb * (*test);
+	//for (int i = 0; i < 4; i++) {
+	//	printf("%f", test2.getPoints()[i]);
+	//}
 	/*for (int x = 0; x < 4; x++) {
 		for (int y = 0; y < 4; y++) {
 			printf("%f ", ma2d[x][y]);
@@ -100,7 +99,7 @@ void Graphics::debugcd()
 	for (int i = 0; i < 4; i++) {
 		delete[] ma2d[i];
 	}*/
-	delete[] ma2d;
+	//delete[] ma2d;
 }
 bool Graphics::CreateVertexBuffer()
 {
@@ -222,13 +221,11 @@ bool Graphics::worldMatrix()
 	delete[] arr2d;
 
 	//Light
-	pcbd.lightPos.element[0] = light.getPos().x;
-	pcbd.lightPos.element[1] = light.getPos().y;
-	pcbd.lightPos.element[2] = light.getPos().z;
+	pcbd.lightPos.element[0] = xCamPos;
+	pcbd.lightPos.element[1] = yCamPos;
+	pcbd.lightPos.element[2] = zCamPos + 1;
 	pcbd.lightPos.element[3] = 1;
-	//make this in to screen space
-	//vec4 camPos(xCamPos, yCamPos, zCamPos, 1);
-	//vec4 ah = makeToCb * camPos;
+
 	pcbd.cameraPos.element[0] = xCamPos;
 	pcbd.cameraPos.element[1] = yCamPos;
 	pcbd.cameraPos.element[2] = zCamPos + 1;
@@ -287,7 +284,7 @@ Graphics::Graphics(UINT WIDTH, UINT HEIGHT, HWND& wnd) :
 	HEIGHT(HEIGHT),
 	makeToCb(vcbd.transform.element),
 	speed(2.5f),
-	light(vec32(0,0,1.f)),
+	light(vec32(0,0,2.f)),
 	quadpos(0,0,0),
 	quadRoationPos(0.5f,0,0)
 {

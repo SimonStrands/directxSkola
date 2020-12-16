@@ -1,6 +1,6 @@
 #pragma once
 #include <math.h>
-
+//meant to be vec3.2 techer doesnt want us to have public floats but idc
 struct vec32 {
 	vec32(float a, float b, float c) {
 		this->x = a;

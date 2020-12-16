@@ -171,15 +171,6 @@ void Matrix4x4::operator=(Matrix4x4 *other)
     delete[] arr2d;
 }
 
-/*float* Matrix4x4::operator*(vec4& other)
-{
-    float *array4x4 = new float[4];
-
-    for (int x = 0; x < 3; x++) {
-         array4x4[x] = mat[0][x] * other.getPoints()[x] + mat[1][x] * other.getPoints()[x] + mat[2][x] * other.getPoints()[x];
-    }
-    return array4x4;
-}*/
 
 float** Matrix4x4::GetMatrix()
 {

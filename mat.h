@@ -12,7 +12,6 @@ public:
 	Matrix4x4 operator*(float mat[4][4]);
 	vec4 operator*(vec4 other);
 	void operator=(Matrix4x4 *other);
-	//float* operator*(vec4 &other);
 	float** GetMatrix();
 private:
 	float mat[4][4] = {
@@ -38,9 +37,3 @@ private:
 		{0,0,1}
 	};
 };
-//1 2 3
-//4 5 6
-//7 8 9
-
-//giving by col [1,2,3,4,5,6,7,8,9]
-//giving by row [1,4,7,2,5,8,3,6,9]
