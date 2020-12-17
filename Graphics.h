@@ -36,7 +36,7 @@ private:
 	//Debug shit
 	float c = 0;
 	//void getVertexBuffer();
-	//void debugcd();
+	void debugcd();
 	void keyboardDebug();
 	bool pressed = false;
 private:

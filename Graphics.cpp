@@ -3,9 +3,33 @@
 
 const float PI = 3.1415926535897f;
 
+void Graphics::debugcd()
+{
+	if (GetKeyState('O') & 0x8000)
+	{
+		if (!pressed) {
+			pressed = true;
+			vec4 p = makeToCb* vec4(0, 0, 1, 0);
+			float* arr = p.getPoints();
+			for (int i = 0; i < 3; i++) {
+				printf("%f ", arr[i]);
+			}
+			printf("\n");
+			delete[] arr;
+		}
+	}
+	else {
+		pressed = false;
+	}
+}
+
 void Graphics::keyboardDebug()
 {
 	if (GetKeyState('A') & 0x8000)
+	{
+		yRot += speed * (float)dt.dt();
+	}
+	if (true)//yes very bad but...
 	{
 		yRot += speed * (float)dt.dt();
 	}
@@ -147,7 +171,6 @@ bool Graphics::worldMatrix()
 		{quadRoationPos.x,    quadRoationPos.y,    quadRoationPos.z,    1},
 	};
 
-	//makeToCb = Matrix4x4(eh1) * rot * eh2 * scal * trans;
 	makeToCb =  Matrix4x4(rot) * Matrix4x4(trans) * Matrix4x4(scal);
 
 	//setting cb
@@ -168,9 +191,9 @@ bool Graphics::worldMatrix()
 	pcbd.lightPos.element[2] = light.getPos().z;
 	pcbd.lightPos.element[3] = 1;
 
-	pcbd.cameraPos.element[0] = xCamPos;
-	pcbd.cameraPos.element[1] = yCamPos;
-	pcbd.cameraPos.element[2] = zCamPos;
+	pcbd.cameraPos.element[0] = -xCamPos;
+	pcbd.cameraPos.element[1] = -yCamPos;
+	pcbd.cameraPos.element[2] = -zCamPos;
 	pcbd.cameraPos.element[3] = 1  ;
 
 
@@ -225,8 +248,9 @@ Graphics::Graphics(UINT WIDTH, UINT HEIGHT, HWND& wnd) :
 	WIDHT(WIDTH),
 	HEIGHT(HEIGHT),
 	makeToCb(vcbd.transform.element),
-	speed(2.5f),
-	light(vec32(0,0,2.f)),
+	speed(1.5f),
+	//known issue maybe should have used 2 quads
+	light(vec32(0.5,0,-2.f)),
 	quadpos(0,0,0),
 	quadRoationPos(0.5f,0,0)
 {
@@ -237,7 +261,9 @@ Graphics::Graphics(UINT WIDTH, UINT HEIGHT, HWND& wnd) :
 	farPlane = 40;
 	nearPlane = 0.1f;
 	
-	xCamPos = yCamPos = 0.0; zCamPos = 2.0f;
+	xCamPos = -0.5f;
+	yCamPos = 0.0; 
+	zCamPos = 2.0f;
 	yRot = 0;
 	scale = 1;
 	nrOfTriangles = 0;
@@ -248,7 +274,6 @@ Graphics::Graphics(UINT WIDTH, UINT HEIGHT, HWND& wnd) :
 	//setting up projection matrix
 	Projection();
 	View();
-	//SetTrianglePos();
 	if (!SetupD3D11(WIDTH, HEIGHT, wnd, device, immediateContext, swapChain, renderTarget, dsTexture, dsView, viewPort, pRS))
 	{
 		std::cerr << "cant set up" << std::endl;
@@ -348,6 +373,7 @@ int Graphics::getNrOfTriangles()
 void Graphics::Render()
 {
 	//clear background
+	debugcd();
 	dt.restartClock();
 	float clearColor[4] = { 0.1f,0.1f,0.1f,0 };
 	immediateContext->ClearRenderTargetView(renderTarget, clearColor);
