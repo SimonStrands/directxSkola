@@ -1,3 +1,2 @@
-add lightnig(spotlight)
-add an offset to the quad
+
 

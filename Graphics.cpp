@@ -88,8 +88,17 @@ bool Graphics::CreateVertexBuffer()
 		
 		
 		{{ 0.25f - quadpos.x,  0.5f - quadpos.y, 0.f - quadpos.z}, {1.0f,0.0f}, {0.0f,0.0f,1.0f,0.0f}},
-		{{ 0.25f - quadpos.x, -0.5f - quadpos.y, 0.f - quadpos.z}, {1.0f,1.0f}, {0.0f,0.0f,1.0f,0.0f}},
 		{{-0.25f - quadpos.x,  0.5f - quadpos.y, 0.f - quadpos.z}, {0.0f,0.0f}, {0.0f,0.0f,1.0f,0.0f}},
+		{{ 0.25f - quadpos.x, -0.5f - quadpos.y, 0.f - quadpos.z}, {1.0f,1.0f}, {0.0f,0.0f,1.0f,0.0f}},
+
+
+		{{ 0.25f - quadpos.x, -0.5f - quadpos.y, 0.f - quadpos.z}, {1.0f, 1.0f}, {0.0f,0.0f,-1.0f,0.0f}},
+		{{-0.25f - quadpos.x, -0.5f - quadpos.y, 0.f - quadpos.z}, {0.0f, 1.0f}, {0.0f,0.0f,-1.0f,0.0f}},
+		{{-0.25f - quadpos.x,  0.5f - quadpos.y, 0.f - quadpos.z}, {0.0f, 0.0f}, {0.0f,0.0f,-1.0f,0.0f}},
+
+		{{ 0.25f - quadpos.x, -0.5f - quadpos.y, 0.f - quadpos.z}, {1.0f,1.0f}, {0.0f,0.0f,-1.0f,0.0f}},
+		{{-0.25f - quadpos.x,  0.5f - quadpos.y, 0.f - quadpos.z}, {0.0f,0.0f}, {0.0f,0.0f,-1.0f,0.0f}},
+		{{ 0.25f - quadpos.x,  0.5f - quadpos.y, 0.f - quadpos.z}, {1.0f,0.0f}, {0.0f,0.0f,-1.0f,0.0f}},
 	};
 
 

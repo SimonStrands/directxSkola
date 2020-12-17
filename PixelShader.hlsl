@@ -25,7 +25,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
 	
 	//defuse
 	float3 lightDir = normalize(input.fragpos.xyz - lightPos.xyz);
-	float ammount_diffuse = max(dot(abs(input.normal.xyz), lightDir), 0.0f);
+	float ammount_diffuse = max(dot(input.normal.xyz, lightDir), 0.0f);
 	float3 defuse_light = ammount_diffuse * light_color;
 
 	//specular
